@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&amp;family=Barlow:wght@400;500;600;700&amp;family=Spline+Sans+Mono:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+  html,body{margin:0;padding:0;background:#081A30;font-family:'Barlow',sans-serif}
+  *{box-sizing:border-box}
+  @keyframes pFade{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+  @keyframes pPulse{0%,100%{opacity:.55}50%{opacity:1}}
+  input[type=range]{-webkit-appearance:none;height:6px;border-radius:3px;outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#3B82F6;border:3px solid #fff;box-shadow:0 1px 5px rgba(0,0,0,.4);cursor:pointer}
+</style>
+</helmet>
+
+<div style="width:100vw;height:100vh;background:radial-gradient(1200px 700px at 75% -10%, #14365C 0%, #081A30 55%);color:#EAF1FB;display:flex;flex-direction:column;overflow:hidden;user-select:none" tabIndex="0">
+
+  <!-- ===== TOP BAR ===== -->
+  <div style="display:flex;align-items:center;gap:16px;padding:14px 26px;flex:0 0 auto">
+    <img src="assets/cumpas-logo.png" alt="Cumpas" style="height:34px;border-radius:8px" onClick="{{ goRail }}">
+    
+    <div style="flex:1;display:flex;gap:5px;max-width:520px;margin:0 auto">
+      <sc-for list="{{ dots }}" as="d" hint-placeholder-count="10">
+        <div onClick="{{ d.go }}" title="{{ d.title }}" style="{{ d.style }}"></div>
+      </sc-for>
+    </div>
+    
+    
+  </div>
+
+  <!-- ===== RAIL (índice de capítulos) ===== -->
+  <sc-if value="{{ isRail }}" hint-placeholder-val="{{ true }}">
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:safe center;padding:10px 40px 30px;min-height:0;overflow-y:auto">
+    <div style="text-align:center;margin-bottom:26px">
+      <img src="assets/cumpas-logo.png" alt="Cumpas" style="height:74px;border-radius:16px">
+      
+      <div style="font-size:15px;color:#8FA6C6;margin-top:6px">Maxikiosco + comida al paso de elaboración propia · Río Turbio, Santa Cruz</div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;max-width:1200px;margin:0 auto;width:100%">
+      <sc-for list="{{ railCards }}" as="c" hint-placeholder-count="10">
+        <div onClick="{{ c.enter }}" style="{{ c.style }}">
+          
+          
+          <div style="font-family:'Barlow Condensed';font-weight:700;font-size:19px;line-height:1.1;margin-top:3px">{{ c.title }}</div>
+          <div style="font-size:11px;color:#8FA6C6;line-height:1.35;margin-top:5px">{{ c.sub }}</div>
+        </div>
+      </sc-for>
+    </div>
+    
+  </div>
+  </sc-if>
+
+  <!-- ===== CONTENIDO DE CAPÍTULO ===== -->
+  <sc-if value="{{ inChapter }}" hint-placeholder-val="{{ false }}">
+  <div style="flex:1;overflow-y:auto;padding:6px 46px 40px;min-height:0">
+    <div style="max-width:1150px;margin:0 auto">
+      <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:18px;animation:pFade .4s ease">
+        
+        <div>
+          
+          <div style="font-family:'Barlow Condensed';font-weight:900;font-size:46px;line-height:1">{{ chTitle }}</div>
+        </div>
+        
+      </div>
+
+      <!-- CAP 1 · PORTADA -->
+      <sc-if value="{{ c0 }}" hint-placeholder-val="{{ false }}">
+        <div style="{{ b1 }}">
+          <div style="display:grid;grid-template-columns:1.3fr 1fr;gap:26px;align-items:center">
+            <div>
+              <div style="font-family:'Barlow Condensed';font-weight:900;font-size:64px;line-height:1.02">Donde entrena y pasa el pueblo,<br><span style="color:#3B82F6">falta quien lo alimente.</span></div>
+              <p style="font-size:17px;color:#AFC2DC;line-height:1.6;margin-top:18px;max-width:560px">CUMPAS es un maxikiosco con comida al paso de elaboración propia, frente al gimnasio municipal de Río Turbio. Un solo local que captura dos negocios: la compra impulsiva de kiosco y el antojo de comida lista.</p>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <div title="Inversión inicial total = equipamiento e instalaciones + gastos de puesta en marcha + capital de trabajo del primer año." style="background:#FFFFFF10;border:1px solid #24466E;border-radius:16px;padding:16px 20px;cursor:help"><div style="font-family:'Spline Sans Mono';font-size:10.5px;letter-spacing:1px;color:#7D93B2">SE NECESITAN</div><div style="font-family:'Barlow Condensed';font-weight:800;font-size:38px;color:#fff">{{ v.inv }}</div></div>
+              <div title="TIR del proyecto: rendimiento anual promedio de la inversión durante 10 años, en términos reales (ya descontada la inflación)." style="background:#FFFFFF10;border:1px solid #24466E;border-radius:16px;padding:16px 20px;cursor:help"><div style="font-family:'Spline Sans Mono';font-size:10.5px;letter-spacing:1px;color:#7D93B2">RINDE POR AÑO</div><div style="font-family:'Barlow Condensed';font-weight:800;font-size:38px;color:#4ADE80">{{ v.tir }}</div></div>
+              <div title="Payback descontado: años hasta recuperar toda la inversión inicial con los flujos del proyecto, descontados a la tasa exigida del 15% real." style="background:#FFFFFF10;border:1px solid #24466E;border-radius:16px;padding:16px 20px;cursor:help"><div style="font-family:'Spline Sans Mono';font-size:10.5px;letter-spacing:1px;color:#7D93B2">SE RECUPERA EN</div><div style="font-family:'Barlow Condensed';font-weight:800;font-size:38px;color:#fff">{{ v.payback }}</div></div>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- CAP 2 · PROBLEMA / SOLUCIÓN -->
+      <sc-if value="{{ c1 }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div style="{{ b1 }}"><div style="background:#FFFFFF0D;border:1px solid #24466E;border-radius:18px;padding:22px 26px;border-left:4px solid #F87171">
+            <div style="font-family:'Barlow Condensed';font-weight:800;font-size:24px;color:#F87171">El problema</div>
+            <p style="font-size:15px;color:#C6D4E8;line-height:1.65;margin:8px 0 0">En la zona del gimnasio municipal —deportistas, escuelas, oficinas y tránsito diario— no hay una oferta de comida rápida de calidad ni un kiosco surtido cerca. La gente resuelve lejos, o no resuelve: demanda que hoy se pierde.</p>
+          </div></div>
+          <div style="{{ b2 }}"><div style="background:#FFFFFF0D;border:1px solid #24466E;border-radius:18px;padding:22px 26px;border-left:4px solid #4ADE80">
+            <div style="font-family:'Barlow Condensed';font-weight:800;font-size:24px;color:#4ADE80">La solución</div>
+            <p style="font-size:15px;color:#C6D4E8;line-height:1.65;margin:8px 0 0">Un local, dos motores: <b style="color:#fff">comida al paso de elaboración propia</b> (panchos, pizzetas, tostados — margen ~61%) + <b style="color:#fff">maxikiosco completo</b> (bebidas, golosinas, cigarrillos, almacén — rotación alta). La comida trae al cliente; el kiosco agranda el ticket.</p>
+          </div></div>
+          <div style="{{ b3 }}"><div style="background:#FFFFFF0D;border:1px solid #24466E;border-radius:18px;padding:22px 26px;border-left:4px solid #3B82F6" title="Roles de categoría del modelo ECR (Efficient Consumer Response), práctica estándar de category management en retail — ver Sullivan &amp; Adcock, 'Retail Marketing' (2002). La categoría 'destino' es la que motiva el viaje al punto de venta; las de impulso y conveniencia se venden por exposición una vez que el cliente entró.">
+            <div style="font-family:'Barlow Condensed';font-weight:800;font-size:24px;color:#3B82F6">Por qué funciona&nbsp;<span style="font-size: 14px; color: rgb(125, 147, 178);">ⓘ</span></div>
+            <p style="font-size:15px;color:#C6D4E8;line-height:1.65;margin:8px 0 0">Es el modelo de <b style="color:#fff">categoría destino + categorías de impulso</b> del retail (ECR / category management): la comida al paso es el motivo del viaje; una vez adentro, el mostrador y las heladeras convierten cada visita en 1,75 productos por compra. La ubicación frente al gimnasio garantiza el tráfico; el mix garantiza el ticket.</p>
+          </div></div>
+        </div>
+      </sc-if>
+
+      <!-- CAP 3 · EVIDENCIA DE MERCADO -->
+      <sc-if value="{{ c2 }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div style="{{ b1 }}"><div style="background:#FFFFFF0D;border:1px solid #24466E;border-radius:18px;padding:20px 26px" title="Tamaño muestral para población finita (fórmula de Cochran con corrección de finitud): n = N·Z²·p·q / (e²·(N−1) + Z²·p·q), con 95% de confianza (Z=1,96), p=q=0,5 (máxima variabilidad) y e=5%.">
+            <div style="display:flex;align-items:center;gap:18px;flex-wrap:wrap">
+              <div style="font-family:'Barlow Condensed';font-weight:800;font-size:22px">1 Se midió&nbsp;<span style="font-size: 14px; color: rgb(125, 147, 178);">ⓘ</span></div>
+              <div style="font-size:13.5px;color:#AFC2DC;flex:1;min-width:280px">Río Turbio tiene <b style="color:#fff">{{ v.pob }}</b> habitantes. La estadística pide {{ v.muestraIdeal }} encuestas para ±5% de error; se hicieron <b style="color:#fff">{{ v.encuestas }}</b> como muestra exploratoria — suficiente para detectar preferencias y hábitos, declarado con honestidad metodológica.</div>
+            </div>
+          </div></div>
+          <div style="{{ b2 }}"><div style="background:#FFFFFF0D;border:1px solid #24466E;border-radius:18px;padding:20px 26px">
+            <div style="font-family:'Barlow Condensed';font-weight:800;font-size:22px;margin-bottom:14px">2 El embudo</div>
+            <div style="display:flex;align-items:stretch;gap:8px">
+              <sc-for list="{{ funnel }}" as="f" hint-placeholder-count="5">
+                <div title="{{ f.tip }}" style="{{ f.style }}">
+                  <div style="font-family:'Spline Sans Mono';font-size:10px;color:#7D93B2;letter-spacing:.5px">{{ f.label }}</div>
+                  <div style="font-family:'Barlow Condensed';font-weight:800;font-size:26px;color:{{ f.color }}">{{ f.val }}</div>
+                  <div style="font-size:10.5px;color:#8FA6C6;line-height:1.3">{{ f.sub }}</div>
+                </div>
+              </sc-for>
+            </div>
+          </div></div>
+          <div style="{{ b3 }}"><div style="background:#FFFFFF0D;border:1px solid #24466E;border-radius:18px;padding:20px 26px" title="Ventas = compras/día × productos por compra × precio medio × días del mes. El precio medio ({{ v.ticket }}) es el promedio ponderado por unidades de los 274 productos del catálogo — la misma fuente viva que usa el Centro de Control, no un número inventado.">
+            <div style="display:flex;align-items:center;gap:22px;flex-wrap:wrap">
+              <div style="font-family:'Barlow Condensed';font-weight:800;font-size:22px">3 Lo que eso significa en plata <span style="font-size: 14px; color: rgb(125, 147, 178);">ⓘ</span></div>
+              <div style="font-family:'Spline Sans Mono';font-size:14px;color:#C6D4E8">{{ v.clientesDia }} compras/día × 1,75 productos × {{ v.ticket }} =</div>
+              <div style="font-family:'Barlow Condensed';font-weight:800;font-size:32px;color:#4ADE80">{{ v.ventasMes }} <span style="font-size:16px;color:#8FA6C6">por mes</span></div>
+            </div>
+          </div></div>
+          <div style="{{ b4 }}"><div style="background:#0E2A4A;border:1px solid #24466E;border-radius:18px;padding:16px 26px">
+            <div style="font-size:13.5px;color:#AFC2DC;line-height:1.6">✔ <b style="color:#fff">Doble control:</b> la cifra se corrobora por dos caminos independientes — el embudo de encuesta (arriba) y la suma producto por producto del catálogo (274 productos × unidades × precios). Ambos convergen en el mismo número: si uno se mueve, el sistema lo marca.</div>
+          </div></div>
+        </div>
+      </sc-if>
+
+      <!-- CAP 4 · EL LOCAL -->
+      <sc-if value="{{ c3 }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div style="{{ b1 }}"><div style="background:#FFFFFF0D;border:1px solid #24466E;border-radius:18px;padding:20px 26px">
+            <div style="font-family:'Barlow Condensed';font-weight:800;font-size:22px;margin-bottom:6px">La esquina correcta</div>
+            <div style="font-size:14.5px;color:#C6D4E8;line-height:1.6">Frente al <b style="color: rgb(255, 255, 255);">gimnasio municipal</b> de Río Turbio: deportistas todos los días, eventos los fines de semana, escuela, municipalidad, museo, consejo alrededor. Tráfico peatonal garantizado sin pagar marketing para generarlo — la ubicación ES el marketing.</div>
+          </div></div>
+          <div style="{{ b2 }}"><div style="background:#FFFFFF0D;border:1px solid #24466E;border-radius:18px;padding:20px 26px">
+            <div style="font-family:'Barlow Condensed';font-weight:800;font-size:22px;margin-bottom:14px">Adentro</div>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
+              <div title="Regla del retail: la categoría destino va al fondo para que el cliente recorra y vea todo el surtido en el camino." style="background:#3B82F61E;border:1.5px solid #3B82F6;border-radius:12px;padding:14px;cursor:help"><div style="font-size:20px">🌭</div><div style="font-family:'Barlow Condensed';font-weight:700;font-size:17px;margin-top:4px">Fondo: cocina y comida al paso</div><div style="font-size:11px;color:#8FA6C6;margin-top:3px">Panchera, horno, freidora, plancha</div></div>
+              <div title="Las bebidas acompañan casi toda compra: visibles desde la entrada, refuerzan la compra de comida." style="background:#0EA5E91E;border:1.5px solid #0EA5E9;border-radius:12px;padding:14px;cursor:help"><div style="font-size:20px">🥤</div><div style="font-family:'Barlow Condensed';font-weight:700;font-size:17px;margin-top:4px">Pared: heladeras y freezers</div><div style="font-size:11px;color:#8FA6C6;margin-top:3px">Bebidas frías, helados, congelados</div></div>
+              <div title="Compra planificada: el cliente la busca por necesidad; no necesita la mejor ubicación." style="background:#64748B2E;border:1.5px solid #64748B;border-radius:12px;padding:14px;cursor:help"><div style="font-size:20px">🧺</div><div style="font-family:'Barlow Condensed';font-weight:700;font-size:17px;margin-top:4px">Centro: góndolas</div><div style="font-size:11px;color:#8FA6C6;margin-top:3px">Almacén, higiene, electrónica</div></div>
+              <div title="La compra impulsiva se decide al pagar: golosinas y cigarrillos al alcance de la mano en la caja." style="background:#D977061E;border:1.5px solid #D97706;border-radius:12px;padding:14px;cursor:help"><div style="font-size:20px">🍬</div><div style="font-family:'Barlow Condensed';font-weight:700;font-size:17px;margin-top:4px">Caja: mostrador de impulso</div><div style="font-size:11px;color:#8FA6C6;margin-top:3px">Golosinas, snacks, cigarrillos</div></div>
+            </div>
+          </div></div>
+          <div style="{{ b3 }}"><div style="background:#FFFFFF0D;border:1px solid #24466E;border-radius:18px;padding:18px 26px">
+            <div style="display:flex;align-items:center;gap:8px;justify-content:space-between">
+              <div style="flex:1;text-align:center"><div style="font-size:22px">🚪</div><div style="font-size:11.5px;color:#AFC2DC;margin-top:3px">Entra</div></div><div style="color:#3B82F6">→</div>
+              <div style="flex:1;text-align:center"><div style="font-size:22px">🗄️</div><div style="font-size:11.5px;color:#AFC2DC;margin-top:3px">Recorre góndolas</div></div><div style="color:#3B82F6">→</div>
+              <div style="flex:1;text-align:center"><div style="font-size:22px">🌭</div><div style="font-size:11.5px;color:#AFC2DC;margin-top:3px">Pide comida</div></div><div style="color:#3B82F6">→</div>
+              <div style="flex:1;text-align:center"><div style="font-size:22px">🍬</div><div style="font-size:11.5px;color:#AFC2DC;margin-top:3px">Suma impulso en caja</div></div><div style="color:#3B82F6">→</div>
+              <div style="flex:1;text-align:center"><div style="font-size:22px">💳</div><div style="font-size:11.5px;color:#AFC2DC;margin-top:3px">Paga y se va (~4 min)</div></div>
+            </div>
+          </div></div>
+        </div>
+      </sc-if>
+
+      <!-- CAP 5 · LA OPERACIÓN -->
+      <sc-if value="{{ c4 }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div style="{{ b1 }}"><div style="background:#FFFFFF0D;border:1px solid #24466E;border-radius:18px;padding:20px 26px">
+            <div style="font-family:'Barlow Condensed';font-weight:800;font-size:22px;margin-bottom:12px">👥 Quién hace qué</div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+              <div style="background:#FFFFFF0A;border-radius:12px;padding:14px"><div style="font-family:'Barlow Condensed';font-weight:700;font-size:18px;color:#3B82F6">Cajero–vendedor</div><div style="font-size:12px;color:#AFC2DC;line-height:1.5;margin-top:4px">Atiende, cobra, repone mostrador y heladeras. Dueño del arqueo de caja de su turno.</div></div>
+              <div style="background:#FFFFFF0A;border-radius:12px;padding:14px"><div style="font-family:'Barlow Condensed';font-weight:700;font-size:18px;color:#4ADE80">Preparador</div><div style="font-size:12px;color:#AFC2DC;line-height:1.5;margin-top:4px">Cocina la comida al paso, controla insumos y limpieza de cocina. Libreta sanitaria y curso de manipulación.</div></div>
+              <div style="background:#FFFFFF0A;border-radius:12px;padding:14px"><div style="font-family:'Barlow Condensed';font-weight:700;font-size:18px;color:#D97706">Encargado (dueño)</div><div style="font-size:12px;color:#AFC2DC;line-height:1.5;margin-top:4px">Compras, proveedores, precios, control de stock y números. Cubre francos.</div></div>
+            </div>
+          </div></div>
+          <div style="{{ b2 }}"><div style="background:#FFFFFF0D;border:1px solid #24466E;border-radius:18px;padding:20px 26px">
+            <div style="font-family:'Barlow Condensed';font-weight:800;font-size:22px;margin-bottom:12px">🕐 El día, en 2 turnos</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+              <div style="background:#FFFFFF08;border:1px solid #24466E;border-radius:14px;padding:16px 18px">
+                <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:10px;border-bottom:1px solid #1E3A5C;padding-bottom:8px">
+                  <div style="font-family:'Barlow Condensed';font-weight:800;font-size:19px;color:#FBBF24">☀️ Turno mañana · 08:00–15:30</div>
+                  <div style="font-size:11px;color:#8FA6C6;white-space:nowrap">cajero + preparador</div>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:8px">
+                  <div style="display:flex;gap:10px"><span style="font-family:'Spline Sans Mono';font-size:11px;color:#3B82F6;flex:0 0 84px">08:00–09:00</span><span style="font-size:12px;color:#C6D4E8;line-height:1.45"><b style="color:#fff">Apertura:</b> fondo de caja inicial, encendido de equipos, producción de comida del día, control de temperaturas de heladeras, reposición de góndolas.</span></div>
+                  <div style="display:flex;gap:10px"><span style="font-family:'Spline Sans Mono';font-size:11px;color:#3B82F6;flex:0 0 84px">09:00–12:00</span><span style="font-size:12px;color:#C6D4E8;line-height:1.45">Venta de media mañana · recepción de proveedores (frigorífico, panadería) con control de remito contra pedido.</span></div>
+                  <div style="display:flex;gap:10px"><span style="font-family:'Spline Sans Mono';font-size:11px;color:#3B82F6;flex:0 0 84px">12:00–14:30</span><span style="font-size:12px;color:#C6D4E8;line-height:1.45"><b style="color:#fff">Pico almuerzo:</b> los dos al frente, comida lista en &lt;5 min.</span></div>
+                  <div style="display:flex;gap:10px"><span style="font-family:'Spline Sans Mono';font-size:11px;color:#3B82F6;flex:0 0 84px">15:00–15:30</span><span style="font-size:12px;color:#C6D4E8;line-height:1.45"><b style="color:#fff">Cambio de turno:</b> arqueo parcial de caja firmado por el saliente, repaso de faltantes y novedades al entrante.</span></div>
+                </div>
+              </div>
+              <div style="background:#FFFFFF08;border:1px solid #24466E;border-radius:14px;padding:16px 18px">
+                <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:10px;border-bottom:1px solid #1E3A5C;padding-bottom:8px">
+                  <div style="font-family:'Barlow Condensed';font-weight:800;font-size:19px;color:#7DD3FC">🌙 Turno tarde · 15:30–23:00</div>
+                  <div style="font-size:11px;color:#8FA6C6;white-space:nowrap">cajero + encargado (refuerza picos)</div>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:8px">
+                  <div style="display:flex;gap:10px"><span style="font-family:'Spline Sans Mono';font-size:11px;color:#3B82F6;flex:0 0 84px">15:30–17:00</span><span style="font-size:12px;color:#C6D4E8;line-height:1.45">Reposición de heladeras y mostrador para el pico · producción de la comida de la tarde-noche.</span></div>
+                  <div style="display:flex;gap:10px"><span style="font-family:'Spline Sans Mono';font-size:11px;color:#3B82F6;flex:0 0 84px">17:00–21:00</span><span style="font-size:12px;color:#C6D4E8;line-height:1.45"><b style="color:#fff">Pico gimnasio + merienda:</b> mostrador de impulso a full, encargado refuerza la atención.</span></div>
+                  <div style="display:flex;gap:10px"><span style="font-family:'Spline Sans Mono';font-size:11px;color:#3B82F6;flex:0 0 84px">21:00–22:30</span><span style="font-size:12px;color:#C6D4E8;line-height:1.45">Venta nocturna tranquila · limpieza de cocina y plancha · retiro de vencimientos próximos a oferta.</span></div>
+                  <div style="display:flex;gap:10px"><span style="font-family:'Spline Sans Mono';font-size:11px;color:#3B82F6;flex:0 0 84px">22:30–23:00</span><span style="font-size:12px;color:#C6D4E8;line-height:1.45"><b style="color:#fff">Cierre:</b> arqueo final contra tickets del día, conteo de stock crítico (dispara los pedidos de mañana), limpieza general y cierre de equipos.</span></div>
+                </div>
+              </div>
+            </div>
+            <div style="font-size:11.5px;color:#8FA6C6;margin-top:10px;line-height:1.5">Dos arqueos por día (cambio de turno y cierre): cada peso de la caja tiene un responsable con nombre en cada momento del día.</div>
+          </div></div>
+          <div style="{{ b3 }}"><div style="background:#FFFFFF0D;border:1px solid #24466E;border-radius:18px;padding:20px 26px">
+            <div style="font-family:'Barlow Condensed';font-weight:800;font-size:22px;margin-bottom:12px">📅 Los ritmos fijos</div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+              <div style="background:#FFFFFF0A;border-radius:12px;padding:14px"><div style="font-family:'Barlow Condensed';font-weight:700;font-size:17px">Todos los días</div><div style="font-size:12px;color:#AFC2DC;line-height:1.5;margin-top:4px">Conteo de stock crítico al cierre · pedido a frigorífico/panadería si el pan o las salchichas tocan su punto de pedido.</div></div>
+              <div style="background:#FFFFFF0A;border-radius:12px;padding:14px"><div style="font-family:'Barlow Condensed';font-weight:700;font-size:17px">Cada semana</div><div style="font-size:12px;color:#AFC2DC;line-height:1.5;margin-top:4px">Pedido a distribuidora de bebidas · limpieza profunda de cocina y heladeras · revisión de vencimientos.</div></div>
+              <div style="background:#FFFFFF0A;border-radius:12px;padding:14px"><div style="font-family:'Barlow Condensed';font-weight:700;font-size:17px">Cada mes</div><div style="font-size:12px;color:#AFC2DC;line-height:1.5;margin-top:4px">Inventario completo · pedido grande a mayorista (Río Gallegos) · revisión de precios y márgenes contra inflación.</div></div>
+            </div>
+          </div></div>
+          <div style="{{ b4 }}"><div style="background:#0E2A4A;border:1px solid #24466E;border-radius:18px;padding:16px 26px">
+            <div style="font-size:13.5px;color:#AFC2DC;line-height:1.6">💰 Costo total del equipo: <b style="color:#fff">{{ v.sueldosMes }}/mes</b> (3 empleados, cargas incluidas) — ya está adentro de todos los números que siguen.</div>
+          </div></div>
+        </div>
+      </sc-if>
+
+      <!-- CAP 6 · ABASTECIMIENTO -->
+      <sc-if value="{{ c5 }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div style="{{ b1 }}"><div style="background:#FFFFFF0D;border:1px solid #24466E;border-radius:18px;padding:20px 26px" title="Punto de pedido (ROP) = demanda diaria × días de entrega + stock de seguridad. Stock de seguridad = z·σ·√LT (z=1,65 para 95% de nivel de servicio). Lote de compra = EOQ de Wilson: √(2·D·S/H). Referencias: Silver, Pyke &amp; Peterson, 'Inventory Management and Production Planning' ; Harris/Wilson (1934) para el lote económico.">
+            <div style="font-family:'Barlow Condensed';font-weight:800;font-size:22px">La regla que garantiza que nunca falte nada <span style="font-size:14px;color:#7D93B2">ⓘ</span></div>
+            <div style="display:flex;align-items:center;gap:14px;margin-top:12px;flex-wrap:wrap">
+              <div style="font-family:'Spline Sans Mono';font-size:15px;background:#081A30;border:1px solid #24466E;border-radius:12px;padding:12px 18px;color:#7DD3FC">Pedir cuando: stock = venta diaria × días de entrega + colchón</div>
+              <div style="font-size:13px;color:#AFC2DC;flex:1;min-width:260px;line-height:1.55">Cada producto e insumo tiene su umbral calculado. Cuando el conteo del cierre lo toca, se pide — antes de que falte, no después. Es la fórmula estándar de gestión de inventarios (punto de pedido + stock de seguridad al 95%).</div>
+            </div>
+          </div></div>
+          <div style="{{ b2 }}"><div style="background:#FFFFFF0D;border:1px solid #24466E;border-radius:18px;padding:20px 26px">
+            <div style="font-family:'Barlow Condensed';font-weight:800;font-size:22px;margin-bottom:12px">🧂 Lo más pedido: los insumos de la comida</div>
+            <div style="font-size:13px;color:#8FA6C6;margin-bottom:12px">La comida al paso no se compra hecha — se produce. Por eso lo que MÁS rota en compras son sus insumos:</div>
+            <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px">
+              <sc-for list="{{ supplyRows }}" as="s" hint-placeholder-count="6">
+                <div title="{{ s.tip }}" style="display:flex;align-items:center;gap:12px;background:#FFFFFF0A;border-radius:11px;padding:11px 14px;cursor:help">
+                  <span style="font-size:18px">{{ s.icon }}</span>
+                  <div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:600;color:#EAF1FB">{{ s.what }}</div><div style="font-size:11px;color:#7D93B2">{{ s.prov }}</div></div>
+                  <div style="text-align:right"><div style="font-family:'Spline Sans Mono';font-size:12.5px;font-weight:600;color:#7DD3FC">{{ s.freq }}</div><div style="font-size:10px;color:#51698A">{{ s.resp }}</div></div>
+                </div>
+              </sc-for>
+            </div>
+          </div></div>
+          <div style="{{ b3 }}"><div style="background:#0E2A4A;border:1px solid #24466E;border-radius:18px;padding:16px 26px">
+            <div style="font-size:13.5px;color:#AFC2DC;line-height:1.6">🛡 <b style="color:#fff">Triple respaldo contra el desabastecimiento:</b> (1) punto de pedido con colchón del 95% por producto · (2) {{ v.diasStock }} días de stock promedio financiados en el capital de trabajo · (3) conteo diario de críticos al cierre, a cargo del encargado. Si un proveedor falla, el colchón cubre la demora.</div>
+          </div></div>
+        </div>
+      </sc-if>
+
+      <!-- CAP 7 · LOS NÚMEROS -->
+      <sc-if value="{{ c6 }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div style="{{ b1 }}"><div style="background:#FFFFFF0D;border:1px solid #24466E;border-radius:18px;padding:20px 26px">
+            <div style="font-family:'Barlow Condensed';font-weight:800;font-size:22px;margin-bottom:12px">🏗 Cuánto se necesita: {{ v.inv }}</div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+              <div title="Equipamiento e instalaciones: heladeras exhibidoras, freezers, horno, freidora, mostrador, góndolas, PC + comandera, cámaras, aire acondicionado, cartel — 17 ítems valuados uno por uno." style="background:#FFFFFF0A;border-radius:12px;padding:14px;cursor:help"><div style="font-size:11px;color:#7D93B2;font-family:'Spline Sans Mono'">EQUIPAMIENTO</div><div style="font-family:'Barlow Condensed';font-weight:800;font-size:28px;margin-top:4px">{{ v.invFija }}</div><div style="font-size:11px;color:#8FA6C6">17 ítems, cotizados uno a uno</div></div>
+              <div title="Puesta en marcha: habilitación municipal, anexo de comida, bomberos, libretas sanitarias, patente de alcohol, refacción del local, depósito de alquiler, marca y lanzamiento." style="background:#FFFFFF0A;border-radius:12px;padding:14px;cursor:help"><div style="font-size:11px;color:#7D93B2;font-family:'Spline Sans Mono'">PUESTA EN MARCHA</div><div style="font-family:'Barlow Condensed';font-weight:800;font-size:28px;margin-top:4px">{{ v.invDif }}</div><div style="font-size:11px;color:#8FA6C6">habilitaciones, refacción, marca</div></div>
+              <div title="Capital de trabajo: el stock inicial (25 días), más una reserva de caja de 1 mes de costos fijos, menos el crédito de proveedores. Es la plata que el negocio necesita tener 'girando'." style="background:#FFFFFF0A;border-radius:12px;padding:14px;cursor:help"><div style="font-size:11px;color:#7D93B2;font-family:'Spline Sans Mono'">CAPITAL DE TRABAJO</div><div style="font-family:'Barlow Condensed';font-weight:800;font-size:28px;margin-top:4px">{{ v.capTrab }}</div><div style="font-size:11px;color:#8FA6C6">stock + caja de reserva</div></div>
+            </div>
+          </div></div>
+          <div style="{{ b2 }}"><div style="background:#FFFFFF0D;border:1px solid #24466E;border-radius:18px;padding:20px 26px">
+            <div style="font-family:'Barlow Condensed';font-weight:800;font-size:22px;margin-bottom:12px">El mes típico</div>
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+              <div title="Ventas del año normal ÷ 12. Salen de 103 compras/día × 1,75 productos × $4.399 × 30 días." style="background:#4ADE8018;border:1px solid #4ADE8055;border-radius:12px;padding:13px 17px;cursor:help"><div style="font-size:10.5px;color:#7D93B2;font-family:'Spline Sans Mono'">VENTAS</div><div style="font-family:'Barlow Condensed';font-weight:800;font-size:26px;color:#4ADE80">{{ v.ventasMes }}</div></div>
+              <div style="font-size:20px;color:#51698A">−</div>
+              <div title="Costo de la mercadería vendida: ~39% en comida al paso (margen 61%) y ~71% en reventa, ponderado por el mix real del catálogo." style="background:#F8717118;border:1px solid #F8717155;border-radius:12px;padding:13px 17px;cursor:help"><div style="font-size:10.5px;color:#7D93B2;font-family:'Spline Sans Mono'">MERCADERÍA</div><div style="font-family:'Barlow Condensed';font-weight:800;font-size:26px;color:#F87171">{{ v.mercMes }}</div></div>
+              <div style="font-size:20px;color:#51698A">−</div>
+              <div title="Costos fijos: sueldos (3 empleados), alquiler, luz, gas, agua, internet, seguro, contador, publicidad, mantenimiento — todo desglosado en el modelo." style="background:#F8717118;border:1px solid #F8717155;border-radius:12px;padding:13px 17px;cursor:help"><div style="font-size:10.5px;color:#7D93B2;font-family:'Spline Sans Mono'">FIJOS</div><div style="font-family:'Barlow Condensed';font-weight:800;font-size:26px;color:#F87171">{{ v.fijosMes }}</div></div>
+              <div style="font-size:20px;color:#51698A">−</div>
+              <div title="Impuestos (ganancias 35%), comisiones de cobro, ingresos brutos, intereses del préstamo, depreciaciones — el detalle completo está en el estado de resultados del modelo." style="background:#F8717118;border:1px solid #F8717155;border-radius:12px;padding:13px 17px;cursor:help"><div style="font-size:10.5px;color:#7D93B2;font-family:'Spline Sans Mono'">IMPUESTOS +INT.</div><div style="font-family:'Barlow Condensed';font-weight:800;font-size:26px;color:#F87171">{{ v.impMes }}</div></div>
+              <div style="font-size:20px;color:#51698A">=</div>
+              <div title="Utilidad neta mensual del año normal: después de TODO — mercadería, fijos, intereses, depreciaciones e impuesto a las ganancias." style="background:#3B82F625;border:2px solid #3B82F6;border-radius:12px;padding:13px 17px;cursor:help"><div style="font-size:10.5px;color:#7DD3FC;font-family:'Spline Sans Mono'">GANANCIA NETA</div><div style="font-family:'Barlow Condensed';font-weight:800;font-size:26px;color:#fff">{{ v.netaMes }}</div></div>
+            </div>
+          </div></div>
+          <div style="{{ b3 }}"><div style="background:#0E2A4A;border:1px solid #24466E;border-radius:18px;padding:16px 26px">
+            <div style="display:flex;gap:26px;flex-wrap:wrap;align-items:baseline">
+              <div style="font-size:13.5px;color:#AFC2DC">En el año: <b style="color:#4ADE80;font-family:'Barlow Condensed';font-size:22px">{{ v.ventasAno }}</b> de ventas</div>
+              <div style="font-size:13.5px;color:#AFC2DC">gasto total <b style="color:#F87171;font-family:'Barlow Condensed';font-size:22px">{{ v.gastoAno }}</b></div>
+              <div style="font-size:13.5px;color:#AFC2DC">ganancia neta <b style="color:#fff;font-family:'Barlow Condensed';font-size:22px">{{ v.netaAno }}</b></div>
+              <div style="font-size:12px;color:#7D93B2">(año normal, después de impuestos e intereses)</div>
+            </div>
+          </div></div>
+        </div>
+      </sc-if>
+
+      <!-- CAP 8 · EL RETORNO -->
+      <sc-if value="{{ c7 }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div style="{{ b1 }}"><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
+            <div title="Valor Actual Neto a 10 años, descontando cada flujo al 15% real anual. Positivo = el proyecto devuelve la inversión Y crea este valor extra." style="background:#FFFFFF0D;border:1px solid #24466E;border-radius:16px;padding:18px;cursor:help"><div style="font-size:10.5px;color:#7D93B2;font-family:'Spline Sans Mono'">VAN (10 AÑOS, 15% REAL)</div><div style="font-family:'Barlow Condensed';font-weight:800;font-size:34px;color:#4ADE80;margin-top:6px">{{ v.van }}</div></div>
+            <div title="Tasa Interna de Retorno del proyecto: la tasa que rinde el capital invertido. Se compara contra el 15% real exigido." style="background:#FFFFFF0D;border:1px solid #24466E;border-radius:16px;padding:18px;cursor:help"><div style="font-size:10.5px;color:#7D93B2;font-family:'Spline Sans Mono'">TIR vs 15% EXIGIDO</div><div style="font-family:'Barlow Condensed';font-weight:800;font-size:34px;color:#4ADE80;margin-top:6px">{{ v.tir }}</div></div>
+            <div title="Payback descontado: cuándo el flujo acumulado (ya descontado al 15%) vuelve a cero." style="background:#FFFFFF0D;border:1px solid #24466E;border-radius:16px;padding:18px;cursor:help"><div style="font-size:10.5px;color:#7D93B2;font-family:'Spline Sans Mono'">RECUPERO</div><div style="font-family:'Barlow Condensed';font-weight:800;font-size:34px;margin-top:6px">{{ v.payback }}</div></div>
+            <div title="Relación beneficio/costo: valor presente de los flujos positivos ÷ valor presente de los negativos. Mayor a 1 = crea valor." style="background:#FFFFFF0D;border:1px solid #24466E;border-radius:16px;padding:18px;cursor:help"><div style="font-size:10.5px;color:#7D93B2;font-family:'Spline Sans Mono'">BENEFICIO / COSTO</div><div style="font-family:'Barlow Condensed';font-weight:800;font-size:34px;margin-top:6px">{{ v.bc }}</div></div>
+          </div></div>
+          <div style="{{ b2 }}"><div style="background:#FFFFFF0D;border:1px solid #24466E;border-radius:18px;padding:20px 26px" title="Punto de equilibrio = costos fijos totales (incluyendo depreciaciones) ÷ margen de contribución. Traducido a compras por día para que sea tangible.">
+            <div style="display:flex;align-items:center;gap:24px;flex-wrap:wrap">
+              <div><div style="font-family:'Barlow Condensed';font-weight:800;font-size:22px">El piso de supervivencia <span style="font-size: 14px; color: rgb(125, 147, 178);">ⓘ</span></div><div style="font-size:13px;color:#AFC2DC;margin-top:4px;max-width:420px;line-height:1.55">Con <b style="color:#fff">{{ v.pe }} compras por día</b> se cubren TODOS los costos. El plan trabaja con {{ v.clientesDia }} — un colchón del <b style="color:#4ADE80">{{ v.margenSeg }}</b> antes de perder plata.</div></div>
+              <div style="flex:1;min-width:280px">
+                <div style="display:flex;justify-content:space-between;font-family:'Spline Sans Mono';font-size:11px;color:#7D93B2;margin-bottom:5px"><span>0</span><span>equilibrio: {{ v.pe }}</span><span>plan: {{ v.clientesDia }}</span></div>
+                <div style="height:16px;background:#081A30;border-radius:8px;overflow:hidden;position:relative">
+                  <div style="position:absolute;left:0;top:0;bottom:0;width:{{ v.peBarW }};background:linear-gradient(90deg,#F87171,#FBBF24)"></div>
+                  <div style="position:absolute;left:{{ v.peBarW }};top:0;bottom:0;right:0;background:linear-gradient(90deg,#22C55E,#4ADE80)"></div>
+                </div>
+              </div>
+            </div>
+          </div></div>
+          <div style="{{ b3 }}"><div style="background:#FFFFFF0D;border:1px solid #24466E;border-radius:18px;padding:20px 26px">
+            <div style="font-family:'Barlow Condensed';font-weight:800;font-size:22px;margin-bottom:12px">Tres futuros posibles</div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+              <sc-for list="{{ escenarios }}" as="e" hint-placeholder-count="3">
+                <div title="{{ e.tip }}" style="{{ e.style }}">
+                  <div style="font-size:16px">{{ e.emoji }} <b style="font-family:'Barlow Condensed';font-size:18px">{{ e.name }}</b></div>
+                  <div style="font-size:11.5px;color:#8FA6C6;margin-top:2px">{{ e.sub }}</div>
+                  <div style="display:flex;gap:16px;margin-top:8px">
+                    <div><div style="font-size:10px;color:#7D93B2;font-family:'Spline Sans Mono'">VAN</div><div style="font-family:'Barlow Condensed';font-weight:800;font-size:20px;color:{{ e.vanColor }}">{{ e.van }}</div></div>
+                    <div><div style="font-size:10px;color:#7D93B2;font-family:'Spline Sans Mono'">TIR</div><div style="font-family:'Barlow Condensed';font-weight:800;font-size:20px;color:{{ e.vanColor }}">{{ e.tir }}</div></div>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </div></div>
+        </div>
+      </sc-if>
+
+      <!-- CAP 9 · RIESGOS -->
+      <sc-if value="{{ c8 }}" hint-placeholder-val="{{ false }}">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+          <div style="{{ b1 }}"><div style="background:#FFFFFF0D;border:1px solid #24466E;border-radius:18px;padding:20px 24px;height:100%">
+            <div style="font-family:'Barlow Condensed';font-weight:800;font-size:20px;color:#FBBF24">¿Y si viene la mitad de la gente?</div>
+            <p style="font-size:13.5px;color:#C6D4E8;line-height:1.6;margin:8px 0 0">El equilibrio está en {{ v.pe }} compras/día contra {{ v.clientesDia }} planificadas. Incluso un año arrancando al 70% del plan sigue arriba del punto de equilibrio. Y el plan ya es conservador: toma solo el 50% de los compradores probables de la encuesta.</p>
+          </div></div>
+          <div style="{{ b2 }}"><div style="background:#FFFFFF0D;border:1px solid #24466E;border-radius:18px;padding:20px 24px;height:100%">
+            <div style="font-family:'Barlow Condensed';font-weight:800;font-size:20px;color:#FBBF24">¿Y la inflación?</div>
+            <p style="font-size:13.5px;color:#C6D4E8;line-height:1.6;margin:8px 0 0">Todo el modelo está en pesos constantes (reales): si los precios y los costos suben juntos, el resultado real no cambia. La revisión mensual de precios (rutina del encargado) mantiene los márgenes. Y la deuda a tasa fija se licúa a favor.</p>
+          </div></div>
+          <div style="{{ b3 }}"><div style="background:#FFFFFF0D;border:1px solid #24466E;border-radius:18px;padding:20px 24px;height:100%">
+            <div style="font-family:'Barlow Condensed';font-weight:800;font-size:20px;color:#FBBF24">¿Y si abre un competidor?</div>
+            <p style="font-size:13.5px;color:#C6D4E8;line-height:1.6;margin:8px 0 0">La barrera es la esquina + la habilitación de comida (anexo municipal, bromatología, bomberos): meses de trámites que CUMPAS ya tiene presupuestados. El que llegue segundo compite contra una marca instalada con tremenda ubicación.</p>
+          </div></div>
+          <div style="{{ b4 }}"><div style="background:#FFFFFF0D;border:1px solid #24466E;border-radius:18px;padding:20px 24px;height:100%">
+            <div style="font-family:'Barlow Condensed';font-weight:800;font-size:20px;color:#FBBF24">¿Y si el gimnasio cierra un mes?</div>
+            <p style="font-size:13.5px;color:#C6D4E8;line-height:1.6;margin:8px 0 0">El gimnasio es el ancla, no el único público: escuela, Muni, concejo, museo y vecinos completan la demanda. El mix de kiosco (golosinas, cigarrillos, almacén) no depende del gimnasio. Además hay 1 mes de costos fijos en caja de reserva.</p>
+          </div></div>
+        </div>
+      </sc-if>
+
+      <!-- CAP 10 · LA PROPUESTA -->
+      <sc-if value="{{ c9 }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div style="{{ b1 }}"><div style="background:#FFFFFF0D;border:1px solid #24466E;border-radius:18px;padding:22px 26px">
+            <div style="font-family:'Barlow Condensed';font-weight:800;font-size:24px;margin-bottom:14px">La estructura del capital</div>
+            <div style="display:flex;gap:10px;align-items:stretch;flex-wrap:wrap">
+              <div title="Aporte propio del inversionista: 40% de lo financiable (puesta en marcha + capital de trabajo). El equipamiento se cubre con capital propio." style="flex:1;min-width:220px;background:#3B82F620;border:1.5px solid #3B82F6;border-radius:14px;padding:16px;cursor:help"><div style="font-size:11px;color:#7DD3FC;font-family:'Spline Sans Mono'">APORTE PROPIO</div><div style="font-family:'Barlow Condensed';font-weight:800;font-size:30px;margin-top:4px">{{ v.aporte }}</div></div>
+              <div title="Préstamo bancario: 60% de lo financiable, a 5 años, TNA 40% (≈6% real con inflación del 32%). La cuota ya está restada en todos los flujos del inversionista." style="flex:1;min-width:220px;background:#FFFFFF0A;border:1.5px solid #24466E;border-radius:14px;padding:16px;cursor:help"><div style="font-size:11px;color:#7D93B2;font-family:'Spline Sans Mono'">PRÉSTAMO (5 AÑOS)</div><div style="font-family:'Barlow Condensed';font-weight:800;font-size:30px;margin-top:4px">{{ v.prestamo }}</div><div style="font-size:11px;color:#8FA6C6;margin-top:2px">cuota {{ v.cuota }}/año · tasa real {{ v.tasaReal }}</div></div>
+              <div title="Más el equipamiento aportado directamente: total de la inversión inicial." style="flex:1;min-width:220px;background:#FFFFFF0A;border:1.5px solid #24466E;border-radius:14px;padding:16px;cursor:help"><div style="font-size:11px;color:#7D93B2;font-family:'Spline Sans Mono'">+ EQUIPAMIENTO</div><div style="font-family:'Barlow Condensed';font-weight:800;font-size:30px;margin-top:4px">{{ v.invFija }}</div><div style="font-size:11px;color:#8FA6C6;margin-top:2px">activo recuperable (20% residual)</div></div>
+            </div>
+          </div></div>
+          <div style="{{ b2 }}"><div style="background:#FFFFFF0D;border:1px solid #24466E;border-radius:18px;padding:22px 26px" title="Flujo del inversionista: mismos flujos del proyecto, más el préstamo recibido, menos las cuotas. El apalancamiento mejora la TIR del capital propio porque la deuda cuesta ~6% real y el proyecto rinde mucho más.">
+            <div style="display:flex;align-items:center;gap:26px;flex-wrap:wrap">
+              <div style="font-family:'Barlow Condensed';font-weight:800;font-size:24px">Para el bolsillo del inversionista <span style="font-size:14px;color:#7D93B2">ⓘ</span></div>
+              <div><div style="font-size:10.5px;color:#7D93B2;font-family:'Spline Sans Mono'">VAN INVERSIONISTA</div><div style="font-family:'Barlow Condensed';font-weight:800;font-size:32px;color:#4ADE80">{{ v.vanInv }}</div></div>
+              <div><div style="font-size:10.5px;color:#7D93B2;font-family:'Spline Sans Mono'">TIR INVERSIONISTA</div><div style="font-family:'Barlow Condensed';font-weight:800;font-size:32px;color:#4ADE80">{{ v.tirInv }}</div></div>
+              <div style="font-size:13px;color:#AFC2DC;max-width:320px;line-height:1.55">La deuda barata (≈{{ v.tasaReal }} real) apalanca el capital propio: el inversionista rinde más que el proyecto.</div>
+            </div>
+          </div></div>
+          <div style="{{ b3 }}"><div style="background:linear-gradient(135deg,#14365C,#0E2A4A);border:1px solid #2E5A8F;border-radius:18px;padding:26px;text-align:center">
+            <div style="font-family:'Barlow Condensed';font-weight:900;font-size:38px;line-height:1.1">{{ v.inv }} hoy → {{ v.netaAno }} netos por año, recuperado en {{ v.payback }}.</div>
+            
+          </div></div>
+        </div>
+      </sc-if>
+
+    </div>
+  </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:900}}">
+class Component extends DCLogic {
+  state = { ch:0, mode:'rail', step:1 };
+
+  // ===== MISMO MOTOR FINANCIERO que el Centro de Control (copiado literal) =====
+  defaults(){ return {
+    ticket:4398.7, itemsPorCompra:1.75, diasMes:30, mesesAno:12, nivelInicial:1.0, crecimiento:0.02,
+    mixComida:0.258, costoComida:0.3932, costoReventa:0.7065, comisionMP:0.025, iibb:0.035, ganancias:0.35,
+    alquiler:900000, empleados:3, costoEmpleado:1200000, contador:300000, delivery:250000, luz:450000, gas:130000,
+    agua:60000, internet:100000, seguro:150000, mantenimiento:200000, publicidad:200000, facturacion:30000,
+    invFija:11780000, invDiferida:7586000, pctFinanciado:0.6, tasaTNA:0.40, inflacion:0.32, plazoPrestamo:5,
+    tasaDescuento:0.15, diasStock:25, diasCobro:1, diasPago:20, reservaMeses:1, vidaEquip:10, amortDiferida:5, valorResidualPct:0.2,
+    poblacionTotal:11077, nivelConfianza:1.96, margenError:0.05, pEncuesta:50, encuestasRealizadas:80,
+    c1Edad:85, c2Interes:90, c3Capacidad:85, c4Cercania:80, interesProducto:85, capacidadReal:85,
+    segSeguro:30, segProbable:40, segQuizas:20, penetracionInicial:50, frecuenciaCompra:4,
+    frecuenciaEncuesta:4, clientesDia:103
+  };}
+  pmt(r,n,pv){ if(r===0)return pv/n; return pv*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1); }
+  irr(cf){ let lo=-0.99,hi=5; const npv=(r)=>cf.reduce((s,c,i)=>s+c/Math.pow(1+r,i),0);
+    const f0=npv(lo),fhi=npv(hi); if((f0<0)===(fhi<0)) return f0<0?-0.99:5; let f=f0;
+    for(let i=0;i<250;i++){ const mid=(lo+hi)/2,fm=npv(mid); if(Math.abs(fm)<1e-6)return Math.max(-0.99,Math.min(5,mid)); if((f<0)===(fm<0)){lo=mid;f=fm;}else{hi=mid;} }
+    return Math.max(-0.99,Math.min(5,(lo+hi)/2)); }
+  npv(rate,cf){ return cf.reduce((s,c,i)=>s+c/Math.pow(1+rate,i),0); }
+  compute(a){
+    const Y=10, diasAno=a.diasMes*a.mesesAno;
+    const cmRatio=a.mixComida*a.costoComida+(1-a.mixComida)*a.costoReventa;
+    const cvRatio=cmRatio+a.comisionMP+a.iibb;
+    const mcRatio=1-cvRatio;
+    const sueldos=a.empleados*a.costoEmpleado*12;
+    const otrosFijosMes=a.alquiler+a.contador+a.delivery+a.luz+a.gas+a.agua+a.internet+a.seguro+a.mantenimiento+a.publicidad+a.facturacion;
+    const costoFijoAnual=sueldos+otrosFijosMes*12;
+    const depFija=a.invFija/a.vidaEquip, amortDif=a.invDiferida/a.amortDiferida;
+    const norm=a.clientesDia*(a.itemsPorCompra||1.75);
+    const clientes=[],ventas=[],costoMerc=[],ebitda=[],dep=[],ebit=[],nof=[],stock=[],cred=[],prov=[];
+    const caja=costoFijoAnual/12*a.reservaMeses;
+    for(let y=1;y<=Y;y++){
+      const c= y===1? norm*a.nivelInicial : norm*Math.pow(1+a.crecimiento,y-2);
+      clientes[y]=c; const v=c*a.ticket*diasAno; ventas[y]=v;
+      costoMerc[y]=v*cmRatio;
+      ebitda[y]=v*mcRatio-costoFijoAnual;
+      dep[y]=depFija+(y<=a.amortDiferida?amortDif:0);
+      ebit[y]=ebitda[y]-dep[y];
+      stock[y]=costoMerc[y]/diasAno*a.diasStock; cred[y]=v/diasAno*a.diasCobro; prov[y]=costoMerc[y]/diasAno*a.diasPago;
+      nof[y]=stock[y]+cred[y]-prov[y]+caja;
+    }
+    const capTrab=nof[1];
+    const varCT=[]; for(let y=1;y<=Y;y++) varCT[y]= y===1?0:nof[y]-nof[y-1];
+    const invInicial=a.invFija+a.invDiferida+capTrab;
+    const financBase=a.invDiferida+capTrab;
+    const prestamo=a.pctFinanciado*financBase, aporte=(1-a.pctFinanciado)*financBase;
+    const tasaReal=(1+a.tasaTNA)/(1+a.inflacion)-1;
+    const cuota=this.pmt(tasaReal,a.plazoPrestamo,prestamo);
+    const interes=[]; let sld=prestamo;
+    for(let y=1;y<=Y;y++){ if(y<=a.plazoPrestamo){ const it=sld*tasaReal,ac=cuota-it; interes[y]=it; sld-=ac; } else interes[y]=0; }
+    const impInv=[],utilNeta=[]; let queb=0;
+    for(let y=1;y<=Y;y++){ const base=ebit[y]-interes[y]; let imp=0; if(base<0){queb+=-base;} else {const net=base-queb; if(net>0){imp=net*a.ganancias;queb=0;}else{queb-=base;}} impInv[y]=imp; utilNeta[y]=base-imp; }
+    const impProj=[]; let quebP=0;
+    for(let y=1;y<=Y;y++){ const base=ebit[y]; if(base<0){quebP+=-base;impProj[y]=0;} else {const net=base-quebP; if(net>0){impProj[y]=net*a.ganancias;quebP=0;}else{quebP-=base;impProj[y]=0;}} }
+    const reinv={5:1380000,8:1050000};
+    const residual=a.invFija*a.valorResidualPct+nof[Y];
+    const cfProj=[]; cfProj[0]=-(a.invFija+a.invDiferida+capTrab);
+    for(let y=1;y<=Y;y++){ let f=ebitda[y]-impProj[y]-(varCT[y]||0); if(reinv[y])f-=reinv[y]; if(y===Y)f+=residual; cfProj[y]=f; }
+    const vanProj=this.npv(a.tasaDescuento,cfProj), tirProj=this.irr(cfProj);
+    const cfInv=[]; cfInv[0]=cfProj[0]+prestamo;
+    for(let y=1;y<=Y;y++){ cfInv[y]=cfProj[y]-(y<=a.plazoPrestamo?cuota:0); }
+    const vanInv=this.npv(a.tasaDescuento,cfInv), tirInv=this.irr(cfInv);
+    let pvIn=0,pvOut=0; cfProj.forEach((c,i)=>{ const d=c/Math.pow(1+a.tasaDescuento,i); if(d>0)pvIn+=d; else pvOut+=-d; });
+    const bc=pvOut?pvIn/pvOut:0;
+    let acum=0,payback=null; for(let i=0;i<cfProj.length;i++){ const prev=acum; acum+=cfProj[i]/Math.pow(1+a.tasaDescuento,i); if(prev<0&&acum>=0&&payback===null){ payback=(i-1)+Math.abs(prev)/(acum-prev); } }
+    const cfTotalEq=costoFijoAnual+(depFija+amortDif);
+    const peVentas=mcRatio>0?cfTotalEq/mcRatio:Infinity;
+    const peClientes=peVentas/(a.ticket*diasAno);
+    const peClientesUnicos=peClientes/(a.itemsPorCompra||1.75);
+    const margenSeg=1-peClientes/norm;
+    return {a,sueldos,otrosFijosMes,costoFijoAnual,capTrab,invInicial,prestamo,aporte,tasaReal,cuota,
+      ventas,costoMerc,ebitda,utilNeta,impInv,interes,vanProj,tirProj,vanInv,tirInv,bc,payback,
+      peClientesUnicos,margenSeg,cmRatio};
+  }
+  funnel(a){
+    const N=a.poblacionTotal,Z=a.nivelConfianza,e=a.margenError,p=a.pEncuesta/100,q=1-p;
+    const nIdeal=(N*Z*Z*p*q)/(e*e*(N-1)+Z*Z*p*q);
+    const MO=N*(a.c1Edad/100)*(a.c2Interes/100)*(a.c3Capacidad/100)*(a.c4Cercania/100);
+    const MP=MO*(a.interesProducto/100);
+    const MD=MP*(a.capacidadReal/100);
+    const IC=(a.segSeguro/100)*0.70+(a.segProbable/100)*0.35+(a.segQuizas/100)*0.10;
+    const CP=MD*IC;
+    const CI=CP*(a.penetracionInicial/100);
+    const CM=CI*a.frecuenciaEncuesta;
+    return {nIdeal,MO,MP,MD,CP,CI,CM};
+  }
+  // ===== formato =====
+  money(v){ const s=v<0?'−':''; v=Math.abs(v); if(v>=1e6) return s+'$'+(v/1e6).toFixed(1).replace('.',',')+' M'; return s+'$'+Math.round(v).toLocaleString('es-AR'); }
+  money0(v){ return (v<0?'−':'')+'$'+Math.round(Math.abs(v)).toLocaleString('es-AR'); }
+  num(v,d){ return Number(v).toLocaleString('es-AR',{maximumFractionDigits:d||0,minimumFractionDigits:d||0}); }
+  pct(v,d){ return (v*100).toFixed(d==null?0:d).replace('.',',')+'%'; }
+
+  chapters(){ return [
+    {icon:'◆',title:'La oportunidad',sub:'Qué es CUMPAS y qué promete',blocks:1},
+    {icon:'💡',title:'Problema y solución',sub:'Por qué esto y por qué acá',blocks:3},
+    {icon:'📈',title:'La evidencia',sub:'Encuesta, embudo y demanda',blocks:4},
+    {icon:'🗺',title:'El local',sub:'Ubicación, layout y recorrido',blocks:3},
+    {icon:'👥',title:'La operación',sub:'Quién, qué, cuándo, cada cuánto',blocks:4},
+    {icon:'📦',title:'El abastecimiento',sub:'Cómo se garantiza que nunca falte',blocks:3},
+    {icon:'💵',title:'Los números',sub:'Inversión, gastos y ganancia',blocks:3},
+    {icon:'🎯',title:'El retorno',sub:'VAN, TIR, recupero y escenarios',blocks:3},
+    {icon:'🛡',title:'Riesgos y respuestas',sub:'Lo que va a preguntar el inversor',blocks:4},
+    {icon:'🤝',title:'La propuesta',sub:'Cuánto, cómo y qué recibe',blocks:3},
+  ];}
+
+  componentDidMount(){
+    // Ticket promedio ponderado: misma fuente que el Centro de Control (catálogo + overrides del usuario).
+    fetch('assets/catalog.json').then(r=>r.json()).then(cat=>{
+      let ov={}; try{ ov=JSON.parse(localStorage.getItem('cumpas_prod'))||{}; }catch(e){}
+      let tv=0,tu=0;
+      for(const p of cat.products){
+        if(p.tipo!=='Venta') continue;
+        const o=ov[p.n]||{};
+        const venta=o.venta!=null?o.venta:p.venta;
+        const unidades=o.unidades!=null?o.unidades:p.unidades;
+        tv+=venta*unidades; tu+=unidades;
+      }
+      if(tu>0) this.setState({liveTicket:tv/tu});
+    }).catch(()=>{});
+    this._key=(e)=>{
+      const {ch,mode,step}=this.state; const chs=this.chapters();
+      if(e.key==='ArrowRight'){ e.preventDefault();
+        if(mode==='rail'){ this.setState({ch:Math.min(chs.length-1,ch+1)}); }
+        else { if(step<chs[ch].blocks) this.setState({step:step+1});
+               else if(ch<chs.length-1) this.setState({ch:ch+1,step:1});
+               else this.setState({mode:'rail'}); } }
+      if(e.key==='ArrowLeft'){ e.preventDefault();
+        if(mode==='rail'){ this.setState({ch:Math.max(0,ch-1)}); }
+        else { if(step>1) this.setState({step:step-1});
+               else if(ch>0) this.setState({ch:ch-1,step:chs[ch-1].blocks});
+               else this.setState({mode:'rail'}); } }
+      if(e.key==='Enter'&&mode==='rail'){ e.preventDefault(); this.setState({mode:'in',step:1}); }
+      if(e.key==='Escape'){ this.setState({mode:'rail'}); }
+    };
+    window.addEventListener('keydown',this._key);
+  }
+  componentWillUnmount(){ window.removeEventListener('keydown',this._key); }
+
+  // Lee el MISMO estado vivo que usa el Centro de Control (localStorage 'cumpas_a'):
+  // así el pitch y el simulador muestran siempre exactamente los mismos números.
+  liveA(){
+    const d=this.defaults();
+    try{ const saved=JSON.parse(localStorage.getItem('cumpas_a')); if(saved&&typeof saved==='object') return Object.assign({},d,saved); }catch(e){}
+    return d;
+  }
+  renderVals(){
+    const a0=this.liveA();
+    const a=this.state.liveTicket>0?Object.assign({},a0,{ticket:this.state.liveTicket}):a0;
+    const m=this.compute(a), fn=this.funnel(a);
+    const chs=this.chapters(); const {ch,mode,step}=this.state;
+    const cur=chs[ch];
+    // valores
+    const netaMes=m.utilNeta[2]/12, ventasMes=m.ventas[2]/12, mercMes=m.costoMerc[2]/12, fijosMes=m.costoFijoAnual/12;
+    const impMes=(m.impInv[2]+m.interes[2])/12;
+    const gastoAno=m.costoMerc[2]+m.costoFijoAnual+m.impInv[2]+m.interes[2];
+    const peRatio=m.peClientesUnicos/a.clientesDia;
+    const v={
+      inv:this.money(m.invInicial), invFija:this.money(a.invFija), invDif:this.money(a.invDiferida), capTrab:this.money(m.capTrab),
+      tir:this.pct(m.tirProj,1), van:this.money(m.vanProj), payback:m.payback?m.payback.toFixed(1).replace('.',',')+' años':'—',
+      bc:m.bc.toFixed(2).replace('.',','),
+      vanInv:this.money(m.vanInv), tirInv:this.pct(m.tirInv,1),
+      aporte:this.money(m.aporte), prestamo:this.money(m.prestamo), cuota:this.money(m.cuota), tasaReal:this.pct(m.tasaReal,1),
+      ventasMes:this.money(ventasMes), mercMes:this.money(mercMes), fijosMes:this.money(fijosMes), impMes:this.money(impMes),
+      netaMes:this.money(netaMes), ventasAno:this.money(m.ventas[2]), gastoAno:this.money(gastoAno), netaAno:this.money(m.utilNeta[2]),
+      sueldosMes:this.money(m.sueldos/12),
+      pob:this.num(a.poblacionTotal), muestraIdeal:this.num(Math.ceil(fn.nIdeal)), encuestas:this.num(a.encuestasRealizadas),
+      clientesDia:this.num(a.clientesDia), ticket:this.money0(a.ticket),
+      pe:this.num(m.peClientesUnicos), margenSeg:this.pct(m.margenSeg,0),
+      peBarW:(peRatio*100).toFixed(0)+'%',
+      diasStock:a.diasStock,
+    };
+    // embudo compacto
+    const fSteps=[
+      {label:'HABITANTES',val:this.num(a.poblacionTotal),sub:'Río Turbio (censo)',color:'#EAF1FB',tip:'Población total de Río Turbio según censo. El punto de partida del embudo.'},
+      {label:'MERCADO OBJETIVO',val:'≈'+this.num(fn.MO),sub:'edad, interés, capacidad, cercanía',tip:'Población filtrada por 4 criterios de segmentación medidos en la encuesta: edad (85%), interés general (90%), capacidad de compra (85%) y cercanía (80%). MO = N × 85% × 90% × 85% × 80%.',color:'#BFD7F5'},
+      {label:'MERCADO DISPONIBLE',val:'≈'+this.num(fn.MD),sub:'interés real × capacidad real',tip:'Del mercado objetivo, quienes declararon interés concreto en el producto (85%) y capacidad real de compra (85%).',color:'#93BDEB'},
+      {label:'COMPRADORES PROBABLES',val:'≈'+this.num(fn.CP),sub:'intención corregida (30/40/20)',tip:'Intención de compra corregida por la regla estándar de investigación de mercados: "seguro" cuenta 70%, "probable" 35%, "quizás" 10% — porque la gente declara más de lo que después hace.',color:'#5FA0E0'},
+      {label:'CLIENTES INICIALES',val:'≈'+this.num(fn.CI),sub:'penetración prudente del 50%',tip:'Solo la MITAD de los compradores probables se toma como clientes del primer año — el supuesto más conservador del embudo.',color:'#3B82F6'},
+      {label:'COMPRAS / MES',val:'≈'+this.num(fn.CM),sub:'× 4 visitas mensuales',tip:'Cada cliente vuelve ~4 veces al mes (frecuencia relevada en la encuesta). '+this.num(fn.CI)+' clientes × 4 = '+this.num(fn.CM)+' compras/mes ≈ '+this.num(fn.CM/30)+' por día — coherente con las '+this.num(a.clientesDia)+' compras/día del plan.',color:'#4ADE80'},
+    ];
+    const funnel=fSteps.map((f,i)=>({...f,style:'flex:1;background:#FFFFFF0A;border:1px solid #24466E;border-radius:12px;padding:12px 10px;cursor:help;min-width:0;text-align:center'}));
+    // abastecimiento
+    const supplyRows=[
+      {icon:'🌭',what:'Pan de pancho, salchichas, queso',prov:'Frigorífico y panadería local (entrega 2–3 días)',freq:'2–3 veces/sem',resp:'preparador',tip:'Los insumos de la comida al paso son perecederos y de altísima rotación: pedido chico y frecuente. Punto de pedido = consumo diario × 3 días de entrega + colchón del 95%. Responsable: el preparador los cuenta al cierre; el encargado confirma el pedido.'},
+      {icon:'🍟',what:'Papas pay, aderezos, descartables',prov:'Distribuidora mayorista (entrega 5–7 días)',freq:'semanal',resp:'encargado',tip:'Insumos secos de la cocina: duran más, se piden junto con el pedido semanal. Bandejas, servilletas y vasos entran acá.'},
+      {icon:'🥤',what:'Bebidas y gaseosas',prov:'Distribuidora de bebidas (entrega ~5 días)',freq:'semanal',resp:'encargado',tip:'La categoría de mayor volumen físico: pedido semanal fijo, ajustado por temporada. Las heladeras son el límite: ~12 días de cobertura.'},
+      {icon:'🍬',what:'Golosinas, snacks, cigarrillos',prov:'Mayorista + distribuidora oficial tabaco',freq:'quincenal',resp:'encargado',tip:'Alta rotación pero no perecedero: lote quincenal optimiza el flete (fórmula EOQ: lote = √(2 × demanda anual × costo de pedido ÷ costo de mantener)).'},
+      {icon:'🧺',what:'Almacén, higiene, limpieza',prov:'Mayorista Río Gallegos (entrega ~10 días)',freq:'mensual',resp:'encargado',tip:'Rotación lenta y proveedor lejano: un pedido grande mensual, aprovechando el viaje. 30–35 días de cobertura.'},
+      {icon:'🍦',what:'Helados y congelados',prov:'Distribuidora de congelados (entrega ~7 días)',freq:'quincenal',resp:'encargado',tip:'Estacional: en verano pasa a semanal, en invierno a mensual. El freezer define el tope de stock.'},
+    ];
+    // escenarios
+    const esc=[[
+      'Pesimista',m.peClientesUnicos,'⛔','apenas el punto de equilibrio','#F87171'],[
+      'Base',a.clientesDia,'➖','el plan: '+this.num(a.clientesDia)+' compras/día','#EAF1FB'],[
+      'Optimista',Math.round(a.clientesDia*1.2),'🚀','+20% de demanda','#4ADE80']];
+    const escenarios=esc.map(e=>{
+      const mm=this.compute(Object.assign({},a,{clientesDia:e[1]}));
+      return {name:e[0],emoji:e[2],sub:e[3],van:this.money(mm.vanProj),tir:this.pct(mm.tirProj,1),
+        vanColor:mm.vanProj>0?'#4ADE80':'#F87171',
+        tip:e[0]+': '+this.num(e[1])+' compras por día. VAN '+this.money(mm.vanProj)+', TIR '+this.pct(mm.tirProj,1)+'. Mismo motor de cálculo, solo cambia la demanda.',
+        style:'background:#FFFFFF0A;border:1px solid '+(e[0]==='Base'?'#3B82F6':'#24466E')+';border-radius:14px;padding:14px 16px;cursor:help'};
+    });
+    // nav UI
+    const dots=chs.map((c,i)=>({title:(i+1)+' · '+c.title, go:()=>this.setState({ch:i,mode:'in',step:1}),
+      style:'flex:1;height:5px;border-radius:3px;cursor:pointer;transition:all .25s;background:'+(i<ch?'#3B82F6':(i===ch?(mode==='in'?'#4ADE80':'#3B82F6'):'#1E3A5C'))}));
+    const railCards=chs.map((c,i)=>{const on=i===ch; return {icon:c.icon,num:'CAP '+String(i+1).padStart(2,'0'),numColor:on?'#7DD3FC':'#51698A',title:c.title,sub:c.sub,
+      enter:()=>this.setState({ch:i,mode:'in',step:1}),
+      style:'border-radius:16px;padding:16px;cursor:pointer;transition:all .25s ease;border:2px solid '+(on?'#3B82F6':'#1E3A5C')+';background:'+(on?'#3B82F61C':'#FFFFFF08')+';transform:'+(on?'translateY(-4px)':'none')+';box-shadow:'+(on?'0 14px 34px rgba(37,99,235,.25)':'none')};});
+    // block reveal styles
+    const bs={}; for(let i=1;i<=4;i++){ const vis=step>=i; bs['b'+i]=vis?'animation:pFade .45s ease;':'opacity:0;pointer-events:none;position:absolute;left:-9999px;'; }
+    const flags={}; for(let i=0;i<10;i++) flags['c'+i]= mode==='in'&&ch===i;
+    return Object.assign({
+      isRail:mode==='rail', inChapter:mode==='in',
+      chIcon:cur.icon, chTitle:cur.title, chKicker:'Capítulo '+(ch+1)+' de 10',
+      chLabel:(ch+1)+' / 10', stepLabel:'paso '+Math.min(step,cur.blocks)+' de '+cur.blocks+' · → para seguir',
+      goRail:()=>this.setState({mode:'rail'}),
+      dots, railCards, v, funnel, supplyRows, escenarios,
+    }, bs, flags);
+  }
+}
+</script>
+</body>
+</html>
